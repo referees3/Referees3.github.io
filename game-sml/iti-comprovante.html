@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pix</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        .container {
+            position: relative;
+            height: 100vh;
+            width: 100vw;
+            overflow: auto; /* Permite rolar o contêiner */
+            background-color: #f0f0f0;
+        }
+        .red-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 30px; /* Altura da barra */
+            background-color: #0000;
+            z-index: 1; /* Garante que a barra fique acima da imagem */
+        }
+        .image-container {
+            position: relative;
+            width: 100%;
+            height: auto;
+        }
+        img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+        .editable-text-container {
+            position: absolute;
+            width: calc(80% - 20px); /* Ajuste o tamanho conforme necessário */
+            background-color: transparent;
+            z-index: 2; /* Garante que o texto fique sobre a imagem */
+        }
+        .editable-text {
+            min-height: 30px; /* Altura mínima do campo de texto */
+            background-color: #0000; /* Fundo branco para melhor legibilidade */
+            color: #42445A; /* Cor do texto */
+            border: 1px solid #0000; /* Borda leve para visualização */
+            padding: 5px;
+            box-sizing: border-box;
+            resize: none; /* Impede o redimensionamento pelo usuário, opcional */
+            font-size: 23px; /* Ajuste o tamanho da fonte conforme necessário */
+            position: relative;
+            overflow: hidden; /* Garante que o texto não ultrapasse os limites do contêiner */
+        }
+        .editable-text-y {
+            min-height: 30px; /* Altura mínima do campo de texto */
+            background-color: #0000; /* Fundo branco para melhor legibilidade */
+            color: #42445A; /* Cor do texto */
+            border: 1px solid #0000; /* Borda leve para visualização */
+            padding: 5px;
+            box-sizing: border-box;
+            resize: none; /* Impede o redimensionamento pelo usuário, opcional */
+            font-size: 17px; /* Ajuste o tamanho da fonte conforme necessário */
+            position: relative;
+            overflow: hidden; /* Garante que o texto não ultrapasse os limites do contêiner */
+        }
+        .editable-text::before {
+            content: "Digite seu texto aqui...";
+            position: absolute;
+            top: 5px; /* Espaço do topo dentro do campo de texto */
+            left: 10px; /* Espaço da esquerda dentro do campo de texto */
+            color: #888; /* Cor do texto da dica */
+            font-size: 18px; /* Tamanho da fonte da dica */
+            pointer-events: none; /* Garante que o texto da dica não seja selecionável */
+            opacity: 0.7; /* Dá um efeito de dica mais leve */
+        }
+        .editable-text:not(:empty)::before {
+            content: ""; /* Remove o texto da dica quando o campo não está vazio */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="red-bar"></div>
+        <div class="image-container">
+            <img src="iti-comprovante.jpg" alt="Descrição da Imagem">
+            
+            <div class="editable-text-container" style="top: 250px; left: 100px;">
+                <div class="editable-text" contenteditable="true">ㅤㅤㅤ R$ 0,00</div>
+            </div>
+
+            <div class="editable-text-container" style="top: 290px; left: 100px;">
+                <div class="editable-text-y" contenteditable="true">às 00:00:00 em 00 fev 2024</div>
+            </div>
+
+            <div class="editable-text-container" style="top: 360px; left: 35px;">
+              <div class="editable-text-y" contenteditable="true">name</div>
+            </div>
+
+            <div class="editable-text-container" style="top: 447px; left: 35px;">
+              <div class="editable-text-y" contenteditable="true">chave</div>
+            </div>
+
+            <div class="editable-text-container" style="top: 530px; left: 35px;">
+              <div class="editable-text-y" contenteditable="true">banco</div>
+            </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
