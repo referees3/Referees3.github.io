@@ -1,174 +1,122 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>nubank</title>
     <style>
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
-            position: relative;
+            overflow: hidden;
         }
         .container {
             position: relative;
+            height: 100vh;
+            width: 100vw;
+            overflow: auto; /* Permite rolar o contêiner */
+            background-color: #f0f0f0;
         }
-        img {
-            max-width: 100%;
+        .red-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 30px; /* Altura da barra */
+            background-color: #0000;
+            z-index: 1; /* Garante que a barra fique acima da imagem */
+        }
+        .image-container {
+            position: relative;
+            width: 100%;
             height: auto;
         }
-        .saldo {
+        img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+        .editable-text-container {
             position: absolute;
-            top: 37%;
-            left: 19%;
-            transform: translate(-50%, -50%);
-            background-color: #0000;
-            color: black;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 29px;
-            font-weight: bold;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-        .saldo input {
-            border: none;
-            background: none;
-            font-size: 47px;
-            font-weight: bold;
-            text-align: right;
-            width: 180px;
-            box-sizing: border-box;
-            background-color: grey;
-            color: red;
-        }
-        .saldo input:focus {
-            outline: none;
+            width: calc(80% - 20px); /* Ajuste o tamanho conforme necessário */
+            background-color: transparent;
+            z-index: 2; /* Garante que o texto fique sobre a imagem */
         }
         .editable-text {
-            position: absolute;
-            background-color: #0000;
-            color: white;
-            border: 1px solid #0000;
+            min-height: 30px; /* Altura mínima do campo de texto */
+            background-color: #0000; /* Fundo branco para melhor legibilidade */
+            color: white; /* Cor do texto */
+            border: 1px solid #0000; /* Borda leve para visualização */
             padding: 5px;
-            border-radius: 5px;
-            font-size: 20px;
-            cursor: pointer;
-        }
-        .editable-text input {
-            border: none;
-            background: none;
-            font-size: 20px;
-            width: 200px;
             box-sizing: border-box;
-            outline: none;
+            resize: none; /* Impede o redimensionamento pelo usuário, opcional */
+            font-size: 20px; /* Ajuste o tamanho da fonte conforme necessário */
+            position: relative;
+            overflow: hidden; /* Garante que o texto não ultrapasse os limites do contêiner */
+            font-weight: 500;
         }
-        .editable-text-top-left {
-            top: 27px;
-            left: 80px;
+        .editable-text2 {
+            min-height: 30px; /* Altura mínima do campo de texto */
+            background-color: #0000; /* Fundo branco para melhor legibilidade */
+            color: #42445A; /* Cor do texto */
+            border: 1px solid #0000; /* Borda leve para visualização */
+            padding: 5px;
+            box-sizing: border-box;
+            resize: none; /* Impede o redimensionamento pelo usuário, opcional */
+            font-size: 25px; /* Ajuste o tamanho da fonte conforme necessário */
+            position: relative;
+            overflow: hidden; /* Garante que o texto não ultrapasse os limites do contêiner */
+            font-weight: 800;
         }
-        .editable-text-top-right {
-            top: 170px;
-            right: 277px;
-            left: auto;
-            font-size: 26px;
+        .editable-text::before {
+            content: "Digite seu texto aqui...";
+            position: absolute;
+            top: 5px; /* Espaço do topo dentro do campo de texto */
+            left: 10px; /* Espaço da esquerda dentro do campo de texto */
+            color: #888; /* Cor do texto da dica */
+            font-size: 18px; /* Tamanho da fonte da dica */
+            pointer-events: none; /* Garante que o texto da dica não seja selecionável */
+            opacity: 0.7; /* Dá um efeito de dica mais leve */
         }
+        .editable-text:not(:empty)::before {
+            content: ""; /* Remove o texto da dica quando o campo não está vazio */
+        }
+.button {
+    position: absolute;
+    bottom: 400px; /* Ajusta a distância do fundo */
+    left: 40px; /* Espaço da esquerda */
+    background-color: #0000; /* Cor azul */
+    color: #0000; /* Cor do texto */
+    width: 60px; /* Largura do botão */
+    height: 60px; /* Altura do botão, igual à largura para garantir a forma circular */
+    border: none; /* Remove bordas */
+    border-radius: 50%; /* Faz o botão ficar redondo */
+    text-align: center; /* Centraliza o texto */
+    line-height: 60px; /* Alinha verticalmente o texto no centro */
+    font-size: 16px; /* Tamanho da fonte */
+    font-weight: bold; /* Negrito */
+    cursor: pointer; /* Aponta para o cursor */
+    z-index: 3; /* Garante que o botão fique sobre outros elementos */
+    text-decoration: none; /* Remove sublinhado */
+}
     </style>
 </head>
 <body>
     <div class="container">
-        <img src="Nubank.jpg" alt="Minha Imagem">
-        <div class="saldo" onclick="editSaldo()">
-            <span id="currency">R$</span>
-            <span id="saldo-text">0,00</span>
-        </div>
-        <div class="editable-text editable-text-top-left" onclick="editText('top-left')">User
-            <span id="text-content-top-left"></span>
-        </div>
-        <div class="editable-text editable-text-top-right" onclick="editText('top-right')">Olá, User
-            <span id="text-content-top-right"></span>
+        <div class="red-bar"></div>
+        <div class="image-container">
+            <img src="Nubank.jpg" alt="Descrição da Imagem">
+            <div class="editable-text-container" style="top: 280px; left: 30px;">
+                <div class="editable-text2" contenteditable="true">R$ 0,00</div>
+            </div>
+            <div class="editable-text-container" style="top: 20px; left: 82px;">
+                <div class="editable-text" contenteditable="true">User</div>
+            </div>
+            <div class="editable-text-container" style="top: 175px; left: 30px;">
+                <div class="editable-text" contenteditable="true">Olá, User</div>
+            </div>
+            <!-- Botão azul -->
+            <a href="Pix-nubank.html" class="button">Clique aqui</a>
         </div>
     </div>
-
-    <script>
-        // Função para formatar o saldo no formato brasileiro
-        function formatSaldo(value) {
-            const num = parseFloat(value);
-            if (num >= 1e9) {
-                return (num / 1e9).toLocaleString('pt-BR', {minimumFractionDigits: 1, maximumFractionDigits: 1}) + 'B'; // Bilhões
-            } else if (num >= 1e6) {
-                return (num / 1e6).toLocaleString('pt-BR', {minimumFractionDigits: 1, maximumFractionDigits: 1}) + 'M'; // Milhões
-            } else if (num >= 1e3) {
-                return (num / 1e3).toLocaleString('pt-BR', {minimumFractionDigits: 1, maximumFractionDigits: 1}) + 'k'; // Milhares
-            } else {
-                return num.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}); // Valor normal
-            }
-        }
-
-        // Função para converter o valor abreviado em número
-        function parseValue(value) {
-            let multiplier = 1;
-            value = value.trim().toUpperCase();
-            
-            if (value.endsWith('B')) {
-                multiplier = 1e9;
-                value = value.slice(0, -1);
-            } else if (value.endsWith('M')) {
-                multiplier = 1e6;
-                value = value.slice(0, -1);
-            } else if (value.endsWith('K')) {
-                multiplier = 1e3;
-                value = value.slice(0, -1);
-            }
-            
-            return parseFloat(value.replace('.', '').replace(',', '.')) * multiplier;
-        }
-
-        // Função para ativar o modo de edição do saldo
-        function editSaldo() {
-            const saldoDiv = document.querySelector('.saldo');
-            const saldoText = document.getElementById('saldo-text').textContent.replace('R$', '').trim();
-            const currency = document.getElementById('currency').textContent;
-
-            saldoDiv.innerHTML = `${currency} <input type="text" id="saldo-input" value="${saldoText}" onblur="saveSaldo()">`;
-            document.getElementById('saldo-input').focus();
-        }
-
-        // Função para salvar o novo valor do saldo
-        function saveSaldo() {
-            const saldoInput = document.getElementById('saldo-input');
-            let newSaldo = saldoInput.value.trim();
-
-            // Tenta converter o valor digitado para um número
-            let numericValue = parseValue(newSaldo);
-            if (isNaN(numericValue)) {
-                numericValue = 0;
-            }
-
-            const formattedSaldo = formatSaldo(numericValue);
-            document.querySelector('.saldo').innerHTML = `R$ <span id="saldo-text">${formattedSaldo}</span>`;
-        }
-
-        // Função para ativar o modo de edição do texto
-        function editText(position) {
-            const textDiv = document.querySelector(`.editable-text-${position}`);
-            const textContent = document.getElementById(`text-content-${position}`).textContent;
-
-            textDiv.innerHTML = `<input type="text" id="text-input-${position}" value="${textContent}" onblur="saveText('${position}')">`;
-            document.getElementById(`text-input-${position}`).focus();
-        }
-
-        // Função para salvar o novo valor do texto
-        function saveText(position) {
-            const textInput = document.getElementById(`text-input-${position}`);
-            const newText = textInput.value.trim();
-
-            document.querySelector(`.editable-text-${position}`).innerHTML = `<span id="text-content-${position}">${newText}</span>`;
-        }
-    </script>
 </body>
 </html>
