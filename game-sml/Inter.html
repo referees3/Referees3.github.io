@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inter</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            overflow: hidden; /* Evita rolagem quando o teclado aparece */
+        }
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* Define a largura máxima para o contêiner principal */
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        .saldo-wrapper {
+            position: absolute;
+            top: 8%; /* Ajuste esta propriedade para mudar a posição vertical do saldo */
+            left: -16%; /* Ajuste esta propriedade para mudar a posição horizontal do saldo */
+            width: 100%; /* Largura total do contêiner */
+            max-width: 100%; /* Garante que o saldo não ultrapasse a largura da tela */
+            padding: 10px;
+            background-color: #0000;
+            box-sizing: border-box;
+            overflow: hidden; /* Garante que o conteúdo não ultrapasse a borda */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .saldo {
+            color: #2C2D31;
+            font-size: 26px;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+        }
+        .saldo input {
+            border: none; /* Remove a borda do campo de entrada */
+            background: white;
+            font-size: 47px;
+            font-weight: bold;
+            text-align: right;
+            width: 100%; /* Largura do campo de entrada */
+            box-sizing: border-box;
+            color: black;
+            padding: 5px;
+            margin-left: 10px;
+            max-width: calc(100% - 100px); /* Ajusta o tamanho para dar espaço para o botão */
+        }
+        .saldo input:focus {
+            outline: none;
+            border-color: none; /* Remove qualquer estilo de borda ao focar */
+        }
+        #currency {
+            flex-shrink: 0; /* Impede que o símbolo encolha */
+        }
+        .editor-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            border-top: 2px solid black;
+            padding: 10px;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .editor-container input {
+            border: none; /* Remove a borda do campo de entrada no editor */
+            background: white;
+            font-size: 47px;
+            font-weight: bold;
+            text-align: right;
+            width: calc(100% - 200px); /* Ajusta o tamanho para dar espaço para botões */
+            box-sizing: border-box;
+            color: black;
+            padding: 5px;
+            margin-left: 10px;
+        }
+        .editor-container input:focus {
+            outline: none;
+            border-color: none; /* Remove qualquer estilo de borda ao focar */
+        }
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .button.cancel {
+            background-color: #dc3545;
+        }
+        .eye-icon {
+            width: 24px;
+            height: 24px;
+            margin-left: 10px;
+            cursor: pointer;
+            fill: orange; /* Define a cor laranja para o olho */
+        }
+        .eye-icon.closed path {
+            fill: orange; /* Garante que a cor laranja seja aplicada ao olho fechado */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="inter.jpg" alt="Minha Imagem">
+        <div class="saldo-wrapper">
+            <div class="saldo" onclick="editSaldo()">
+                <span id="currency">R$</span>
+                <span id="saldo-text">1.000.000,00</span>
+                <!-- Ícone do olho (visível) -->
+                <svg class="eye-icon closed" onclick="toggleSaldoVisibility()" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M12 4.5C6.48 4.5 2 8.98 2 12s4.48 7.5 10 7.5 10-4.48 10-7.5S17.52 4.5 12 4.5zm0 13.5c-3.58 0-6.85-2.49-7.88-5.85C5.15 10.49 8.42 8 12 8c3.58 0 6.85 2.49 7.88 5.85C18.85 15.51 15.58 18 12 18zm0-8.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5z"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <div class="editor-container" id="editor-container" style="display: none;">
+        <input type="text" id="saldo-input" onblur="saveSaldo()" autofocus>
+        <div class="buttons">
+            <button class="button" onclick="saveSaldo()">Salvar</button>
+            <button class="button cancel" onclick="cancelEdit()">Cancelar</button>
+        </div>
+    </div>
+
+    <script>
+        const MAX_SALDO = 9999999.99; // Saldo máximo permitido
+        const EDITION_LIMIT = 10000; // Limite para edição detalhada
+        let previousValue = '0,00'; // Armazena o valor anterior para o botão cancelar
+        let isSaldoVisible = true; // Estado atual da visibilidade do saldo
+
+        function formatSaldo(value) {
+            return parseFloat(value).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
+
+        function editSaldo() {
+            const saldoDiv = document.querySelector('.saldo');
+            const saldoText = document.getElementById('saldo-text').textContent.replace(/\./g, '').replace(',', '.').trim();
+            const currency = document.getElementById('currency').textContent;
+
+            previousValue = saldoText; // Armazena o valor antes da edição
+
+            document.getElementById('saldo-input').value = saldoText;
+            document.getElementById('editor-container').style.display = 'flex';
+            document.getElementById('saldo-input').focus();
+        }
+
+        function saveSaldo() {
+            const saldoInput = document.getElementById('saldo-input');
+            let newSaldo = saldoInput.value.trim();
+
+            let numericValue = parseFloat(newSaldo.replace('.', '').replace(',', '.'));
+            if (isNaN(numericValue)) {
+                numericValue = 0;
+            }
+
+            let formattedSaldo;
+            if (numericValue > MAX_SALDO) {
+                formattedSaldo = formatSaldo(MAX_SALDO) + "...";
+            } else if (numericValue <= EDITION_LIMIT) {
+                formattedSaldo = formatSaldo(numericValue);
+            } else {
+                formattedSaldo = formatSaldo(numericValue);
+            }
+
+            document.querySelector('.saldo').innerHTML = `<span id="currency">R$</span><span id="saldo-text">${isSaldoVisible ? formattedSaldo : '****'}</span><svg class="eye-icon" onclick="toggleSaldoVisibility()" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="${isSaldoVisible ? 'M12 4.5C6.48 4.5 2 8.98 2 12s4.48 7.5 10 7.5 10-4.48 10-7.5S17.52 4.5 12 4.5zm0 13.5c-3.58 0-6.85-2.49-7.88-5.85C5.15 10.49 8.42 8 12 8c3.58 0 6.85 2.49 7.88 5.85C18.85 15.51 15.58 18 12 18zm0-8.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5z' : 'M12 4.5C6.48 4.5 2 8.98 2 12s4.48 7.5 10 7.5 10-4.48 10-7.5S17.52 4.5 12 4.5zm0 13.5c-3.58 0-6.85-2.49-7.88-5.85C5.15 10.49 8.42 8 12 8c3.58 0 6.85 2.49 7.88 5.85C18.85 15.51 15.58 18 12 18zm0-8.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5z'}"/></svg>`;
+            document.getElementById('editor-container').style.display = 'none'; // Oculta o editor
+        }
+
+        function cancelEdit() {
+            document.querySelector('.saldo').innerHTML = `<span id="currency">R$</span><span id="saldo-text">${previousValue}</span><svg class="eye-icon" onclick="toggleSaldoVisibility()" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="${isSaldoVisible ? 'M12 4.5C6.48 4.5 2 8.98 2 12s4.48 7.5 10 7.5 10-4.48 10-7.5S17.52 4.5 12 4.5zm0 13.5c-3.58 0-6.85-2.49-7.88-5.85C5.15 10.49 8.42 8 12 8c3.58 0 6.85 2.49 7.88 5.85C18.85 15.51 15.58 18 12 18zm0-8.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5z' : 'M12 4.5C6.48 4.5 2 8.98 2 12s4.48 7.5 10 7.5 10-4.48 10-7.5S17.52 4.5 12 4.5zm0 13.5c-3.58 0-6.85-2.49-7.88-5.85C5.15 10.49 8.42 8 12 8c3.58 0 6.85 2.49 7.88 5.85C18.85 15.51 15.58 18 12 18zm0-8.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5z'}"/></svg>`;
+            document.getElementById('editor-container').style.display = 'none'; // Oculta o editor
+        }
+
+        function toggleSaldoVisibility() {
+            const saldoText = document.getElementById('saldo-text');
+            const eyeIcon = document.querySelector('.eye-icon');
+
+            if (isSaldoVisible) {
+                saldoText.textContent = '****'; // Mostra asteriscos quando o saldo está oculto
+                eyeIcon.classList.add('closed');
+            } else {
+                saldoText.textContent = formatSaldo(parseFloat(saldoText.textContent.replace('.', '').replace(',', '.')));
+                eyeIcon.classList.remove('closed');
+            }
+
+            isSaldoVisible = !isSaldoVisible;
+        }
+    </script>
+</body>
+</html>

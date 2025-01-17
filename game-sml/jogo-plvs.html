@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo de Adivinhação</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url('2.gif'); /* URL do seu GIF de fundo */
+            background-color: black;
+            background-size: cover;
+            background-position: center;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        
+        .container {
+            background-color: #0000;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+            position: relative;
+        }
+        
+        #uploadBtn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #0000;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        
+        #uploadBtn:hover {
+            background-color: grey;
+        }
+        
+        #score {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #333;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+        
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            box-sizing: border-box;
+            border: 2px solid #aaa;
+            border-radius: 6px;
+            font-size: 1.2rem;
+            color: #333;
+            background-color: #eee;
+            outline: none;
+        }
+        
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        #result {
+            margin-top: 20px;
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button id="uploadBtn" onclick="handleUploadClick()">Img</button>
+        <h1>Adivinhação</h1>
+        <p>Dica: <span id="hint"></span> ?</p>
+        <p>Resposta:</p>
+        <input type="text" id="guessInput">
+        <br>
+        <button onclick="checkGuess()">Verificar</button>
+        <p id="result"></p>
+        <div id="score">Acertos: <span id="scoreCount">0</span></div>
+    </div>
+
+    <script>
+        // Array de palavras e dicas
+        var words = [
+            { word: "gato", hint: "Animal doméstico conhecido por ser independente" },
+            { word: "brasília", hint: "Qual é a capital do Brasil" },
+            { word: "praia", hint: "Local de areia e mar para lazer" },
+            { word: "4", hint: "Quanto é 2 + 2" },
+            { word: "júpiter", hint: "Qual é o maior planeta do Sistema Solar" },
+            { word: "azul", hint: "Que cor é o céu em um dia claro" },
+            
+            { word: "não", hint: "Qual é o oposto de Sim" },
+            
+            { word: "branca", hint: "Qual é a cor da neve" },
+            { word: "três", hint: "Quantos lados tem um triângulo" },
+            { word: "caneta", hint: "O que você usa para escrever no papel" },
+            { word: "outono", hint: "Qual é a estação do ano após o verão" },
+            { word: "Armstrong", hint: "Quem foi o primeiro homem a pisar na lua" },
+            { word: "ferro", hint: "Qual é o nome do elemento químico com o símbolo FE" },
+            { word: "andes", hint: "Como é chamada a maior cordilheira do mundo" },
+            { word: "canberra", hint: "Qual é a capital da Austrália" },
+            { word: "aquarela", hint: "Como é chamada a técnica de pintura em que são usadas cores diluídas em água" },
+            { word: "fotossíntese", hint: "Qual é o nome do processo pelo qual as plantas convertem a luz solar em energia" }
+            // Adicione mais palavras e dicas conforme necessário
+        ];
+
+        var currentWordIndex = 0;
+        var chosenWord = words[currentWordIndex].word;
+        var hint = words[currentWordIndex].hint;
+        var scoreCount = 0;
+
+        // Exibe a dica no elemento HTML
+        document.getElementById("hint").innerText = hint;
+
+        // Função para lidar com o clique no botão de escolher imagem
+        function handleUploadClick() {
+            var input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = function(event) {
+                var file = event.target.files[0];
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    document.body.style.backgroundImage = 'url(' + e.target.result + ')';
+                };
+                reader.readAsDataURL(file);
+            };
+            input.click();
+        }
+
+        function checkGuess() {
+            var guess = document.getElementById("guessInput").value.trim().toLowerCase();
+            
+            if (guess === chosenWord) {
+                document.getElementById("result").innerHTML = "<span style='color: #4CAF50;'>Parabéns! Você acertou!</span>";
+                scoreCount++;
+                document.getElementById("scoreCount").innerText = scoreCount;
+                // Avança para a próxima palavra se houver mais
+                currentWordIndex++;
+                if (currentWordIndex < words.length) {
+                    chosenWord = words[currentWordIndex].word;
+                    hint = words[currentWordIndex].hint;
+                    document.getElementById("hint").innerText = hint;
+                } else {
+                    document.getElementById("hint").innerText = "";
+                    document.getElementById("guessInput").disabled = true;
+                    document.getElementById("result").innerText = "Você acertou todas as palavras!";
+                }
+                document.getElementById("guessInput").value = "";
+            } else {
+                document.getElementById("result").innerHTML = "<span style='color: #f44336;'>Erro! Tente novamente.</span>";
+                // Limpa o campo de entrada para nova tentativa
+                document.getElementById("guessInput").value = "";
+            }
+        }
+    </script>
+</body>
+</html>

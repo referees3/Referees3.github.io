@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin Simulador</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: black;
+            color: #00ff00;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .header {
+            position: absolute;
+            top: 0;
+            right: 0;
+            margin: 20px;
+        }
+        .counter {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .matrix {
+            width: 100%;
+            height: 60%;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            white-space: nowrap;
+        }
+        .scrolling-numbers {
+            animation: scroll 2s linear infinite;
+        }
+        @keyframes scroll {
+            0% { transform: translateY(100%); }
+            100% { transform: translateY(-100%); }
+        }
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #00ff00;
+            color: black;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #00cc00;
+        }
+
+        /* Styles for the custom alert */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.5); 
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; 
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; 
+            max-width: 500px;
+            text-align: center;
+        }
+        .modal-header {
+            padding: 2px 16px;
+            background-color: #00ff00;
+            color: white;
+            font-size: 24px;
+        }
+        .modal-body {
+            padding: 2px 16px;
+            font-size: 18px;
+            color: black;
+        }
+        .modal-footer {
+            padding: 2px 16px;
+            background-color: #00ff00;
+            color: white;
+        }
+        .close {
+            color: white;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <button onclick="withdraw()">Saque</button>
+    </div>
+    <div class="counter" id="bitcoinCounter">bit 0.00000000</div>
+    <div class="matrix" id="matrix">
+        <!-- Números serão inseridos aqui -->
+    </div>
+    <button onclick="startMatrixEffect()">Iniciar Mineração</button>
+
+    <!-- The Modal -->
+    <div id="welcomeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close" onclick="closeModal()">&times;</span>
+                Bem-vindo!
+            </div>
+            <div class="modal-body">
+                <p>Clique 2 vezes em Iniciar Mineração para evitar bugs.</p>
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeModal()">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let matrixInterval;
+        let bitcoinInterval;
+        let bitcoinAmount = 0.00000000;
+
+        function startMatrixEffect() {
+            const matrixDiv = document.getElementById('matrix');
+            matrixDiv.innerHTML = ''; // Limpa qualquer conteúdo existente
+
+            matrixInterval = setInterval(() => {
+                const numbers = document.createElement('div');
+                numbers.classList.add('scrolling-numbers');
+                numbers.textContent = generateRandomNumbers(50);
+                matrixDiv.appendChild(numbers);
+
+                // Remove linhas de números antigos para evitar sobrecarregar a página
+                if (matrixDiv.childElementCount > 20) {
+                    matrixDiv.removeChild(matrixDiv.firstChild);
+                }
+            }, 200);
+
+            // Inicia o contador de bitcoin
+            bitcoinInterval = setInterval(updateBitcoinCounter, 6000);
+        }
+
+        function stopMatrixEffect() {
+            if (matrixInterval) {
+                clearInterval(matrixInterval);
+                matrixInterval = null;
+            }
+            if (bitcoinInterval) {
+                clearInterval(bitcoinInterval);
+                bitcoinInterval = null;
+            }
+        }
+
+        function generateRandomNumbers(length) {
+            let result = '';
+            const characters = '010011010011';
+            for (let i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return result;
+        }
+
+        function updateBitcoinCounter() {
+            bitcoinAmount += 0.00000001;
+            const bitString = bitcoinAmount.toFixed(8);
+            const bitcoinCounter = document.getElementById('bitcoinCounter');
+            bitcoinCounter.textContent = `bit ${bitString}`;
+        }
+
+        function withdraw() {
+            const walletKey = prompt("Por favor, insira a chave da sua carteira Bitcoin:");
+            if (walletKey) {
+                alert(`Você sacou ${bitcoinAmount.toFixed(8)} bitcoins para a carteira: ${walletKey}`);
+                bitcoinAmount = 0.00000000;
+                const bitcoinCounter = document.getElementById('bitcoinCounter');
+                bitcoinCounter.textContent = `bit ${bitcoinAmount.toFixed(8)}`;
+            } else {
+                
+            }
+        }
+
+        // Função para abrir o modal
+        function openModal() {
+            document.getElementById('welcomeModal').style.display = 'block';
+        }
+
+        // Função para fechar o modal
+        function closeModal() {
+            document.getElementById('welcomeModal').style.display = 'none';
+        }
+
+        // Exibe o modal ao carregar a página
+        document.addEventListener('DOMContentLoaded', openModal);
+    </script>
+</body>
+</html>

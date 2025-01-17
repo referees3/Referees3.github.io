@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iti</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            position: relative;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        .saldo, .editable-text, .extra-saldo {
+            position: absolute;
+            background-color: #0000;
+            color: dimgray;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .saldo {
+            top: 51%;
+            left: 80%;
+            transform: translate(-50%, -50%);
+        }
+        .editable-text {
+            bottom: 20%;
+            right: 16%; 
+            font-size: 15px;
+        }
+        .extra-saldo {
+            bottom: 25%;
+            right: 10%;
+            font-size: 15px;
+        }
+        .saldo input, .editable-text input, .extra-saldo input {
+            border: none;
+            background: none;
+            font-size: 47px;
+            font-weight: bold;
+            text-align: right;
+            width: 180px;
+            box-sizing: border-box;
+            background-color: grey;
+            color: red;
+        }
+        .saldo input:focus, .editable-text input:focus, .extra-saldo input:focus {
+            outline: none;
+        }
+        .username-container {
+            position: absolute;
+            top: 10%;
+            left: 23%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        .username {
+            background-color: #0000;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 50px;
+            font-size: 24px;
+            cursor: pointer;
+            white-space: nowrap;
+            margin-bottom: 40px;
+            position: relative;
+            top: 26px;
+        }
+        .extra-username {
+            background-color: #0000;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 50px;
+            font-size: 20px;
+            cursor: pointer;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .username input, .extra-username input {
+            border: none;
+            background: none;
+            font-size: 24px;
+            color: white;
+            text-align: center;
+            width: 200px;
+            box-sizing: border-box;
+        }
+        .username input:focus, .extra-username input:focus {
+            outline: none;
+        }
+        .extra-username img {
+            width: 40px;
+            height: auto;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .extra-username input[type="file"] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="iti.jpg" alt="Minha Imagem">
+        <div class="username-container">
+            <div class="extra-username">
+                <label for="image-upload">
+                    <img src="icone.png" alt="Ícone Extra" id="extra-username-icon"> <!-- Imagem pequena antes do nome extra -->
+                </label>
+                <input type="file" id="image-upload" accept="image/*" onchange="uploadImage(event)">
+                <span id="extra-username-text" onclick="editExtraUsername()">#</span>User
+            </div>
+            <div class="username" onclick="editUsername()">Olá, User
+                <span id="username-text"></span>
+            </div>
+        </div>
+        <div class="saldo" onclick="editSaldo()">
+            <span id="currency">R$</span>
+            <span id="saldo-text">0,00</span>
+        </div>
+        <div class="editable-text" onclick="editText()">+ 0
+            <span id="text-content"></span>
+        </div>
+        <div class="extra-saldo" onclick="editExtraSaldo()">
+            <span id="extra-currency">R$</span>
+            <span id="extra-saldo-text">0,00</span>
+        </div>
+    </div>
+
+    <script>
+        // Função para formatar o saldo no formato brasileiro
+        function formatSaldo(value) {
+            const num = parseFloat(value);
+            if (num >= 1e9) {
+                return (num / 1e9).toLocaleString('pt-BR', {minimumFractionDigits: 1, maximumFractionDigits: 1}) + 'B'; // Bilhões
+            } else if (num >= 1e6) {
+                return (num / 1e6).toLocaleString('pt-BR', {minimumFractionDigits: 1, maximumFractionDigits: 1}) + 'M'; // Milhões
+            } else if (num >= 1e3) {
+                return (num / 1e3).toLocaleString('pt-BR', {minimumFractionDigits: 1, maximumFractionDigits: 1}) + 'k'; // Milhares
+            } else {
+                return num.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}); // Valor normal
+            }
+        }
+
+        // Função para converter o valor abreviado em número
+        function parseValue(value) {
+            let multiplier = 1;
+            value = value.trim().toUpperCase();
+            
+            if (value.endsWith('B')) {
+                multiplier = 1e9;
+                value = value.slice(0, -1);
+            } else if (value.endsWith('M')) {
+                multiplier = 1e6;
+                value = value.slice(0, -1);
+            } else if (value.endsWith('K')) {
+                multiplier = 1e3;
+                value = value.slice(0, -1);
+            }
+            
+            return parseFloat(value.replace('.', '').replace(',', '.')) * multiplier;
+        }
+
+        // Função para ativar o modo de edição do saldo
+        function editSaldo() {
+            const saldoDiv = document.querySelector('.saldo');
+            const saldoText = document.getElementById('saldo-text').textContent.replace('R$', '').trim();
+            const currency = document.getElementById('currency').textContent;
+
+            saldoDiv.innerHTML = `${currency} <input type="text" id="saldo-input" value="${saldoText}" onblur="saveSaldo()">`;
+            document.getElementById('saldo-input').focus();
+        }
+
+        // Função para salvar o novo valor do saldo
+        function saveSaldo() {
+            const saldoInput = document.getElementById('saldo-input');
+            let newSaldo = saldoInput.value.trim();
+
+            // Tenta converter o valor digitado para um número
+            let numericValue = parseValue(newSaldo);
+            if (isNaN(numericValue)) {
+                numericValue = 0;
+            }
+
+            const formattedSaldo = formatSaldo(numericValue);
+            document.querySelector('.saldo').innerHTML = `R$ <span id="saldo-text">${formattedSaldo}</span>`;
+        }
+
+        // Função para ativar o modo de edição do nome de usuário
+        function editUsername() {
+            const usernameDiv = document.querySelector('.username');
+            const usernameText = document.getElementById('username-text').textContent.trim();
+
+            usernameDiv.innerHTML = `<input type="text" id="username-input" value="${usernameText}" onblur="saveUsername()">`;
+            document.getElementById('username-input').focus();
+        }
+
+        // Função para salvar o novo nome de usuário
+        function saveUsername() {
+            const usernameInput = document.getElementById('username-input');
+            const newUsername = usernameInput.value.trim();
+            document.querySelector('.username').innerHTML = `<span id="username-text">${newUsername}</span>`;
+        }
+
+        // Função para ativar o modo de edição do texto
+        function editText() {
+            const textDiv = document.querySelector('.editable-text');
+            const textContent = document.getElementById('text-content').textContent.trim();
+
+            textDiv.innerHTML = `<input type="text" id="text-input" value="${textContent}" onblur="saveText()">`;
+            document.getElementById('text-input').focus();
+        }
+
+        // Função para salvar o novo texto
+        function saveText() {
+            const textInput = document.getElementById('text-input');
+            let newText = textInput.value.trim();
+
+            // Tenta converter o valor digitado para um número
+            let numericValue = parseValue(newText);
+            if (isNaN(numericValue)) {
+                numericValue = 0;
+            }
+
+            const formattedText = formatSaldo(numericValue);
+            document.querySelector('.editable-text').innerHTML = `<span id="text-content">${formattedText}</span>`;
+        }
+
+        // Função para ativar o modo de edição do nome de usuário extra
+        function editExtraUsername() {
+            const extraUsernameDiv = document.querySelector('.extra-username');
+            const extraUsernameText = document.getElementById('extra-username-text').textContent.trim();
+
+            const iconHTML = document.querySelector('.extra-username img').outerHTML; // Mantém a imagem
+
+            extraUsernameDiv.innerHTML = `${iconHTML} <input type="text" id="extra-username-input" value="${extraUsernameText}" onblur="saveExtraUsername()">`;
+            document.getElementById('extra-username-input').focus();
+        }
+
+        // Função para salvar o novo nome de usuário extra
+        function saveExtraUsername() {
+            const extraUsernameInput = document.getElementById('extra-username-input');
+            const newExtraUsername = extraUsernameInput.value.trim();
+            const iconHTML = document.querySelector('.extra-username img').outerHTML; // Mantém a imagem
+
+            document.querySelector('.extra-username').innerHTML = `${iconHTML} <span id="extra-username-text">${newExtraUsername}</span>`;
+        }
+
+        // Função para ativar o modo de edição do saldo extra
+        function editExtraSaldo() {
+            const extraSaldoDiv = document.querySelector('.extra-saldo');
+            const extraSaldoText = document.getElementById('extra-saldo-text').textContent.replace('R$', '').trim();
+            const extraCurrency = document.getElementById('extra-currency').textContent;
+
+            extraSaldoDiv.innerHTML = `${extraCurrency} <input type="text" id="extra-saldo-input" value="${extraSaldoText}" onblur="saveExtraSaldo()">`;
+            document.getElementById('extra-saldo-input').focus();
+        }
+
+        // Função para salvar o novo valor do saldo extra
+        function saveExtraSaldo() {
+            const extraSaldoInput = document.getElementById('extra-saldo-input');
+            let newExtraSaldo = extraSaldoInput.value.trim();
+
+            // Tenta converter o valor digitado para um número
+            let numericValue = parseValue(newExtraSaldo);
+            if (isNaN(numericValue)) {
+                numericValue = 0;
+            }
+
+            const formattedExtraSaldo = formatSaldo(numericValue);
+            document.querySelector('.extra-saldo').innerHTML = `R$ <span id="extra-saldo-text">${formattedExtraSaldo}</span>`;
+        }
+
+        // Função para fazer o upload da imagem
+        function uploadImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('extra-username-icon').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</body>
+</html>

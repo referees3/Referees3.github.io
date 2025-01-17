@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imagem com Vários Elementos Editáveis</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+            overflow: hidden;
+        }
+
+        .container {
+            position: relative;
+        }
+
+        img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .editable-text {
+            position: absolute;
+            font-size: 24px;
+            color: black;
+            background-color: #0000;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .editable-image {
+            position: absolute;
+            width: 115px;
+            height: 134px;
+            cursor: pointer;
+        }
+        #image1 {
+            top: 15.5%;
+            left: 21.3%;
+        }
+        #image2 {
+            top: 81%;
+            left: 40%;
+            height: 50px;
+            width: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="cnh.jpg" alt="Imagem centralizada">
+
+<div class="editable-text" contenteditable="true" style="top: 9.5%; left: 22%; font-size: 4px; font-weight: bold;">Nome Completo</div>
+
+        <div class="editable-text" contenteditable="true" style="top: 14.5%; left: 51%; font-size: 4px; font-weight: bold;">M2185894</div>
+
+        <div class="editable-text" contenteditable="true" style="top: 14.5%; left: 70%; font-size: 4px;font-weight: bold;">SSP</div>
+
+        <div class="editable-text" contenteditable="true" style="top: 14.5%; left: 82.5%; font-size: 4px;font-weight: bold;">MG</div>
+
+        <div class="editable-text" contenteditable="true" style="top: 19.5%; left: 51%; font-size: 6px;font-weight: bold;">123.456.789-12</div>
+
+        <div class="editable-text" contenteditable="true" style="top: 19.5%; left: 74.5%; font-size: 6px;font-weight: bold;">00/00/0000</div>
+
+        <div class="editable-text" contenteditable="true" style="top: 25.5%; left: 50.9%; font-size: 4px;font-weight: bold;">Nome Completo do pai</div>
+
+        <div class="editable-text" contenteditable="true" style="top: 29.5%; left: 50.9%; font-size: 4px;font-weight: bold;">Nome Completo da mãe</div>
+
+        <div class="editable-text" contenteditable="true" style="top: 36.5%; left: 82.6%; font-size: 10px; color: #CF3131;font-weight: bold;">B</div>
+
+        <div class="editable-text" contenteditable="true" style="top: 42.5%; left: 23%; font-size: 10px; color: #CF3131;font-weight: bold;">01337723232</div>
+
+        <div class="editable-text" contenteditable="true" style="top: 42%; left: 49%; font-size: 10px; color: #CF3131;font-weight: bold;">00/00/0000</div>
+
+        <div class="editable-text" contenteditable="true" style="top: 42%; left: 70%; font-size: 10px;font-weight: bold;">00/00/0000</div>
+
+        <div class="editable-text" contenteditable="true" style="top: 75.5%; left: 20%; font-size: 10px;font-weight: bold;">IPATINGA, MG</div>
+
+        <div class="editable-text" contenteditable="true" style="top: 75.5%; left: 71%; font-size: 10px;font-weight: bold;">00/00/0000</div>
+
+        <div class="editable-text" contenteditable="true" style="top: 49%; left: 20%; font-size: 10px;">Se não tiver apague essa mssg!!!</div>
+
+        <div class="editable-text" contenteditable="true" style="top: 81%; left: 74%; font-size: 4px;">28608268916<br/>MG594092922</div>
+
+<div class="editable-text" contenteditable="true" style="position: absolute; top: 32.5%; left: 1%; font-size: 16px; transform: rotate(-90deg); color: #317637;">2215740937</div>
+<div class="editable-text" contenteditable="true" style="position: absolute; top: 81.5%; left: -0.5%; font-size: 17px; transform: rotate(-90deg); color: #317637;">2215740937</div>
+
+
+<img id="image1" src="cnh-usuario.jpg" alt="Imagem pequena 1" class="editable-image">
+<input type="file" id="fileInput1" style="display: none;">
+
+<img id="image2" src="cnh-asinatura.png" alt="Imagem pequena 2" class="editable-image">
+<input type="file" id="fileInput2" style="display: none;">
+
+
+
+
+    </div>
+<script>
+  function setupImageChange(imageId, fileInputId) {
+    const fileInput = document.getElementById(fileInputId);
+    const image = document.getElementById(imageId);
+
+    image.addEventListener('click', () => {
+      fileInput.click();
+    });
+
+    fileInput.addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          image.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+
+  setupImageChange('image1', 'fileInput1');
+  setupImageChange('image2', 'fileInput2');
+</script>
+</body>
+</html>
