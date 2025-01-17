@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RfStudio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #000428, #004e92);
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        nav {
+            position: relative;
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            gap: 15px;
+        }
+
+        nav ul li {
+            display: inline;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .menu-button {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 2em;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .menu-content {
+            display: none;
+            flex-direction: column;
+            position: absolute;
+            right: 0;
+            top: 50px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        .menu-content a {
+            color: #fff;
+            text-decoration: none;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+            }
+
+            .menu-button {
+                display: block;
+            }
+        }
+
+        section {
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        section#home {
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .news-container {
+            width: 90%;
+            max-width: 800px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin: 20px auto;
+            color: #333;
+        }
+
+        .header {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            background-image: linear-gradient(to right, #4CAF50, #45a049);
+        }
+
+        .month-section {
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .month-title {
+            font-size: 24px;
+            color: #4CAF50;
+            margin-bottom: 10px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+
+        .event {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease-in-out;
+            position: relative;
+        }
+
+        .event:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .event-title {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .event-date {
+            font-size: 14px;
+            color: #777;
+            margin-bottom: 8px;
+        }
+
+        .event-description {
+            font-size: 16px;
+            color: #555;
+        }
+
+        .event-company {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .news-container {
+                width: 95%;
+            }
+
+            .event {
+                padding: 10px;
+            }
+
+            .event-title {
+                font-size: 16px;
+            }
+
+            .event-date {
+                font-size: 12px;
+            }
+
+            .event-description {
+                font-size: 14px;
+            }
+
+            .event-company {
+                top: -20px;
+                font-size: 12px;
+                padding: 3px 8px;
+            }
+        }
+
+        div img {
+            width: 15px;
+            height: 15px;
+            margin-left: 5px;
+            font-size: 12px;
+        }
+
+        footer {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            text-align: center;
+            color: #fff;
+        }
+        #imageContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+#imgcontat img {
+  width: 250px; /* Defina o tamanho desejado para suas imagens */
+    height: auto;
+    border-radius: 8px; /* Adicione bordas arredondadas, se desejar */
+    transition: transform 0.3s ease-in-out; /* Adicione uma transição suave ao efeito de hover */
+}
+#imgcontat img:hover {
+  transform: scale(1.2);
+}
+
+#imageContainer img {
+    width: 200px; /* Defina o tamanho desejado para suas imagens */
+    height: auto;
+    border-radius: 8px; /* Adicione bordas arredondadas, se desejar */
+    transition: transform 0.3s ease-in-out; /* Adicione uma transição suave ao efeito de hover */
+}
+
+#imageContainer img:hover {
+    transform: scale(1.2); /* Efeito de escala ao passar o mouse sobre a imagem */
+}
+
+
+
+        h1 {
+            font-size: 3em;
+            margin: 0;
+            display: inline-block;
+        }
+        h1 span {
+            display: inline-block;
+            animation: colorChange 2s infinite;
+        }
+        @keyframes colorChange {
+            0% { color: #ff0000; }
+            16.7% { color: #ff7f00; }
+            33.4% { color: #ffff00; }
+            50% { color: #00ff00; }
+            66.7% { color: #0000ff; }
+            83.4% { color: #4b0082; }
+            100% { color: #8b00ff; }
+        }
+        h1 span:nth-child(1) { animation-delay: 0s; }
+        h1 span:nth-child(2) { animation-delay: 0.2s; }
+        h1 span:nth-child(3) { animation-delay: 0.4s; }
+        h1 span:nth-child(4) { animation-delay: 0.6s; }
+        h1 span:nth-child(5) { animation-delay: 0.8s; }
+        h1 span:nth-child(6) { animation-delay: 1s; }
+        h1 span:nth-child(7) { animation-delay: 1.2s; }
+        h1 span:nth-child(8) { animation-delay: 1.4s; }
+        h1 span:nth-child(9) { animation-delay: 1.6s; }
+        h1 span:nth-child(10) { animation-delay: 1.8s; }
+        h1 span:nth-child(11) { animation-delay: 2s; }
+        h1 span:nth-child(12) { animation-delay: 2.2s; }
+        h1 span:nth-child(13) { animation-delay: 2.4s; }
+        h1 span:nth-child(14) { animation-delay: 2.6s; }
+        h1 span:nth-child(15) { animation-delay: 2.8s; }
+        h1 span:nth-child(16) { animation-delay: 3s; }
+        
+         .containerbcd {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .square {
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            overflow: hidden;
+        }
+        .square img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+
+        .container567 {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            position: relative;
+            background-color: black;
+            padding: 40px;
+            border-radius: 0px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .counter09 {
+            text-align: center;
+            margin: 0 20px;
+        }
+        .counter09 i {
+            font-size: 2em;
+            margin-bottom: 10px;
+            color: #4CAF50;
+        }
+        .counter09 span {
+            display: block;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+        }
+        .counter09 label {
+            font-size: 1em;
+            color: #777;
+        }
+        .interact-link {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            font-size: 1em;
+            color: grey;
+            text-decoration: none;
+        }
+        .interact-link:hover {
+            text-decoration: underline;
+        }
+        
+        
+.carousel-container {
+    width: 80%;
+    max-width: 800px;
+    margin: 0 auto; /* Centraliza o contêiner na página */
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    background-color: #0000;
+}
+
+.carousel {
+    display: flex;
+    justify-content: center; /* Centraliza os itens dentro do contêiner do carrossel */
+    transition: transform 0.5s ease-in-out;
+    touch-action: pan-y; /* Permite o deslizamento horizontal */
+}
+
+.carousel img {
+    width: 60px; /* Define a largura específica para as imagens */
+    height: auto; /* Mantém a proporção das imagens */
+    margin: 10px;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+}
+
+.carousel img:hover {
+    transform: scale(1.05); /* Efeito de zoom ao passar o mouse */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+        
+
+    </style>
+</head>
+<body>
+    <header>
+      <h1>
+        <span>R</span>
+        <span>f</span>
+        <span>S</span>
+        <span>t</span>
+        <span>u</span>
+        <span>d</span>
+        <span>i</span>
+        <span>o</span>
+      </h1>
+        <nav>
+            <ul>
+                <li><a href="#home">Início</a></li>
+                <li><a href="#about">Sobre</a></li>
+                <li><a href="#services">Serviços</a></li>
+                <li><a href="#contact">Contato</a></li>
+            </ul>
+            <button class="menu-button" onclick="toggleMenu()">☰</button>
+            <div class="menu-content" id="menuContent">
+                <a href="#home">Início</a>
+                <a href="#about">Sobre</a>
+                <a href="#services">Serviços</a>
+                <a href="#contact">Contato</a>
+                 <a href="game-sml/-AH3.0-MENUGAME-RFSTUDIO.html">Game/Sml</a>
+                <a href="sorteio.html">Sorteios</a>
+            </div>
+        </nav>
+    </header>
+    <section id="home">
+        <h2>Bem-vindo(a)</h2>
+        <p>Ao Futuro com RFPDS Em um mundo em constante evolução, RFPDS emerge como um líder, nv visionário na indústria de tecnologia. Com um compromisso inabalável com a inovação, estamos moldando o amanhã através de produtos e serviços revolucionários. Desde soluções avançadas de cibersegurança até plataformas de última geração em inteligência artificial, cada iniciativa da RfStudios e Rfpds redefine os padrões de excelência e eficiência. Estamos aqui para não apenas acompanhar o progresso, mas para liderá-lo, transformando desafios em oportunidades e sonhos em realidade. Junte-se a nós enquanto mudamos o mundo, um avanço tecnológico de cada vez.</p>
+
+        <div class="news-container">
+            <div class="header">Novidades</div>
+            <div class="month-section">
+                <div class="month-title">2024</div>
+                <div class="event">
+                    <div class="event-company">RfStudio</div>
+                    
+                    
+<div class="event-title">#Novas Novidades</div>Atenção!! em breve, nova loja não perca.
+<div class="event-date">#RFPDS <img src="img/verificado.png" alt="Verificado"></div>
+<div class="event-description">
+Em breve!
+</div>
+</div>
+
+
+
+                
+            </div>
+        </div>
+    </section>
+
+<section id="about">
+    <h2>Imagens</h2>
+    <div id="imageContainer">
+        <img src="img/img1.png" alt="Imagem 1"
+    </div>
+</section>
+
+
+    <section id="services">
+        <h2>Nossos Serviços</h2>
+        <p>Programação
+        Saiber segurança
+        informações hackings <br><br>1. Desenvolvimento de Software: Desenvolvimento de aplicativos móveis, web e desktop.<br><br>2. Consultoria em Tecnologia: Consultoria em estratégia digital, transformação digital, e arquitetura de sistemas.<br><br>3. Segurança Cibernética: Análise de vulnerabilidades, testes de penetração e implementação de políticas de segurança.<br><br>4. Integração de Sistemas: Integração de sistemas empresariais e APIs.<br><br>5. Cloud Computing: Migração para a nuvem, otimização de infraestrutura e serviços gerenciados na nuvem.<br><br>6. Machine Learning e Inteligência Artificial: Desenvolvimento de modelos de machine learning, processamento de linguagem natural, entre outros.<br><br>7. IoT (Internet das Coisas): Desenvolvimento e implementação de soluções IoT para empresas.<br><br>8. Desenvolvimento de Jogos: Criação de jogos para plataformas diversas.<br><br>9. Automação de Processos: Automação de processos empresariais através de ferramentas tecnológicas.<br><br>10. Suporte Técnico e Manutenção: Serviços de suporte técnico, manutenção preventiva e corretiva de sistemas.<br><br>11. E-commerce: Desenvolvimento de lojas virtuais, integração de sistemas de pagamento e otimização de conversão.<br><br>12. Marketing Digital: Estratégias de marketing digital, como SEO, PPC, mídia social e e-mail marketing para aumentar as vendas.<br><br>13. Gestão de Conteúdo: Criação de conteúdo relevante para aumentar o engajamento e as vendas.<br><br>14. Análise de Dados: Utilização de dados para análise de comportamento do consumidor e otimização de vendas.<br><br>15. Logística e Fulfillment: Soluções para gestão de estoque, envio e entrega eficientes.<br><br>16. Customer Relationship Management (CRM): Implementação de sistemas CRM para melhorar o relacionamento com o cliente e aumentar as vendas.</p>
+    </section>
+
+    <section id="contact">
+        <h2>Contato</h2>
+<div class="containerbcd">
+  <div class="square" onclick="window.location.href='https://api.whatsapp.com/send?phone=5538999194859&text=Ol%C3%A1%2C%20Oque%20deseja%3F';">
+    <img src="img/z1.png" alt="Image 1">
+  </div>
+  <div class="square" onclick="window.location.href='#';">
+    <img src="img/z2.png" alt="Image 2">
+  </div>
+  <div class="square" onclick="window.location.href='#';">
+    <img src="img/z3.png" alt="Image 3">
+  </div>
+  <div class="square" onclick="window.location.href='https://m.youtube.com/@Rfpds';">
+    <img src="img/z4.png" alt="Image 4">
+  </div>
+  <div class="square" onclick="window.location.href='https://www.instagram.com/rfpds.oficial/';">
+    <img src="img/z5.png" alt="Image 5">
+  </div>
+  <div class="square" onclick="window.location.href='https://rfpds.com';">
+    <img src="img/android.png" alt="Image 6">
+  </div>
+</div>
+    </section>
+
+
+<div class="carousel-container">
+        <div class="carousel" id="carousel">
+            <img src="img/google.png" alt="Image 1">
+            <img src="img/github.png" alt="Image 2">
+            <img src="img/Apple.png" alt="Image 3">
+            <img src="img/adidas.png" alt="Image 4">
+            <!-- Duplicando as imagens para criar um loop contínuo -->
+            <img src="img/google.png" alt="Image 1">
+            <img src="img/github.png" alt="Image 2">
+            <img src="img/Apple.png" alt="Image 3">
+            <img src="img/adidas.png" alt="Image 4">
+            
+            <img src="img/google.png" alt="Image 1">
+            <img src="img/github.png" alt="Image 2">
+            <img src="img/Apple.png" alt="Image 3">
+            <img src="img/adidas.png" alt="Image 4">
+        </div>
+    </div>
+
+
+
+    <div class="container567">
+        <div class="counter09">
+            <i class="fas fa-users"></i>
+            <span id="followers">9999</span>
+            <label>Seguidores</label>
+        </div>
+        <div class="counter09">
+            <i class="fas fa-thumbs-up"></i>
+            <span id="likes">9999</span>
+            <label>Curtidas</label>
+        </div>
+        <div class="counter09">
+            <i class="fas fa-eye"></i>
+            <span id="views">9999</span>
+            <label>Viws</label>
+        </div>
+        <a href="#" class="interact-link">Interaja</a>
+    </div>
+
+    <footer>
+        <p>&copy; 2025</p>
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            var menuContent = document.getElementById('menuContent');
+            if (menuContent.style.display === 'flex') {
+                menuContent.style.display = 'none';
+            } else {
+                menuContent.style.display = 'flex';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Site carregado com sucesso!");
+        });
+        
+
+    // Script para visualização👇
+function updateCounts() {
+    const today = new Date();
+    const startDate = new Date('2024-07-19'); 
+    const daysSinceStart = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+    
+    const initialFollowers = 0;
+    const initialLikes = 0;
+    const initialViews = 0;
+    
+    const newFollowers = initialFollowers + daysSinceStart * 12;
+    const newLikes = initialLikes + daysSinceStart * 45;
+    const newViews = initialViews + daysSinceStart * 78;
+
+    document.getElementById('followers').textContent = newFollowers;
+    document.getElementById('likes').textContent = newLikes;
+    document.getElementById('views').textContent = newViews;
+}
+
+document.addEventListener('DOMContentLoaded', updateCounts);
+        // script viws views
+        
+
+
+        let index = 0;
+        let startX;
+
+        function scrollCarousel(direction) {
+            const carousel = document.getElementById('carousel');
+            const totalImages = carousel.children.length / 2; // Porque duplicamos as imagens
+            const imageWidth = carousel.children[0].offsetWidth + 20; // 20 é a soma da margem dos dois lados
+
+            index = (index + direction + totalImages) % totalImages;
+
+            const offset = -index * imageWidth;
+            carousel.style.transform = `translateX(${offset}px)`;
+
+            // Verifica se estamos no meio do carrossel e reinicia para o início sem a transição
+            if (index === 0) {
+                setTimeout(() => {
+                    carousel.style.transition = 'none';
+                    carousel.style.transform = `translateX(0px)`;
+                    index = 0;
+                }, 500);
+            } else {
+                carousel.style.transition = 'transform 0.5s ease-in-out';
+            }
+        }
+
+        function touchStart(event) {
+            startX = event.touches[0].clientX;
+        }
+
+        function touchMove(event) {
+            if (!startX) {
+                return;
+            }
+
+            let moveX = event.touches[0].clientX;
+            let diffX = startX - moveX;
+
+            if (diffX > 50) {
+                scrollCarousel(1); // Swipe left to move to the next image
+                startX = null;
+            } else if (diffX < -50) {
+                scrollCarousel(-1); // Swipe right to move to the previous image
+                startX = null;
+            }
+        }
+
+        function touchEnd() {
+            startX = null;
+        }
+
+        document.getElementById('carousel').addEventListener('touchstart', touchStart);
+        document.getElementById('carousel').addEventListener('touchmove', touchMove);
+        document.getElementById('carousel').addEventListener('touchend', touchEnd);
+
+        setInterval(() => scrollCarousel(1), 3000); // Slide every 3 seconds
+
+    </script>
+
+
+</body>
+</html>
+

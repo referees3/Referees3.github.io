@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saldo User</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1c1c1c;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            color: #ffffff;
+        }
+
+        .header {
+            background-color: #282828;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .header .user-info,
+        .header .saldo {
+            font-size: 1.2em;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #chart-container {
+            width: 80%;
+            height: 70%;
+            background-color: #2e2e2e;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        /* Login Overlay */
+        #login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        #login-box {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            width: 300px;
+            text-align: center;
+        }
+
+        #login-box input[type="text"], #login-box input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border: 1px solid #444;
+            background-color: #1c1c1c;
+            color: #ffffff;
+        }
+
+        #login-box button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: #28a745;
+            color: #ffffff;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        #login-box button:hover {
+            background-color: #218838;
+        }
+
+        .error {
+            color: #e74c3c;
+            font-size: 0.9em;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #282828;
+            padding: 10px 30px;
+            text-align: center;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer .code {
+            font-size: 1.1em;
+        }
+
+        .footer button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            background-color: #28a745;
+            color: #ffffff;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        .footer button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="login-overlay">
+        <div id="login-box">
+            <h2>Login</h2>
+            <input type="text" id="username" placeholder="Nome de Usuário">
+            <input type="password" id="password" placeholder="Senha">
+            <button onclick="login()">Entrar</button>
+            <div class="error" id="error-msg"></div>
+        </div>
+    </div>
+
+    <div class="header">
+        <div class="user-info">
+            <span>Usuário: <strong id="displayName">-</strong></span>
+        </div>
+        <div class="saldo">
+            <span>Saldo: <strong id="displayBalance">-</strong></span>
+        </div>
+    </div>
+
+    <div class="content">
+        <div id="chart-container">
+            <canvas id="tradeChart"></canvas>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="code">
+            Código: <strong id="displayCode">-</strong>
+        </div>
+        <button onclick="showAlert()">Saiba mais!</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const users = {
+            "Adm": {password: "adm", saldo: "$19.402,26", code: "#RFPDS777adm.6667435754"},
+            
+            "Ray": {password: "Ray56789", saldo: "$00,50", code: "#Ray56789.98765"},
+            
+            "Roberta": {password: "Roberta876434.864e", saldo: "$18.000,03", code: "#Roberta8644345..6"},
+            
+            "Soares": {password: "Soares76459754", saldo: "$1.300,00", code: "#Soares87644355.765"},
+            
+            "María": {password: "María4321.56789", saldo: "$01,70", code: "#María752893.864"}
+        };
+
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (users[username] && users[username].password === password) {
+                document.getElementById('displayName').innerText = username;
+                document.getElementById('displayBalance').innerText = users[username].saldo;
+                document.getElementById('displayCode').innerText = users[username].code;
+                document.getElementById('login-overlay').style.display = 'none';
+            } else {
+                document.getElementById('error-msg').innerText = 'Nome de usuário ou senha incorretos';
+            }
+        }
+
+        function showAlert() {
+            alert("Codigo único para resgatar, saldo do site, para saque entre em contato com os adms ou desenvolvedores do site!");
+        }
+
+        function generateRandomData() {
+            let data = [];
+            for (let i = 0; i < 7; i++) {
+                data.push(Math.floor(Math.random() * (13500 - 12000 + 1)) + 12000);
+            }
+            return data;
+        }
+
+        const ctx = document.getElementById('tradeChart').getContext('2d');
+        const tradeChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                datasets: [{
+                    label: 'Estatística',
+                    data: generateRandomData(),
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0.1,
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        grid: {
+                            color: '#444'
+                        },
+                        ticks: {
+                            color: '#ffffff'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            color: '#444'
+                        },
+                        ticks: {
+                            color: '#ffffff'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#ffffff'
+                        }
+                    }
+                }
+            }
+        });
+
+        setInterval(() => {
+            tradeChart.data.datasets[0].data = generateRandomData();
+            tradeChart.update();
+        }, 2000);
+    </script>
+
+</body>
+</html>
