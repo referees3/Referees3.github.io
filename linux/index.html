@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linux</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url('kali2.jpg');
+            background-repeat: repeat-y;
+            background-size: 550px;
+            background-position: left 0 right 0;
+            font-family: Arial, sans-serif;
+        }
+        
+        .sidebar {
+            height: 753px;
+            width: 50px; /* Largura reduzida */
+            position: fixed;
+            top: 70px;
+            left: 0px;
+            background-color: black;
+            padding-top: 20px;
+            color: #fff;
+        }
+        
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar ul li {
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .sidebar ul li:hover {
+            background-color: green;
+        }
+        
+        .content {
+            margin-left: 80px; /* Ajustado para a largura da barra lateral */
+            padding: -60px;
+            color: red;
+        }
+        
+        .sidebar ul li img {
+            width: 50px; /* Tamanho dos ícones */
+            height: 50px;
+        }
+
+        .blocks-container {
+            display: flex;
+            justify-content: space-between; /* Espaço igual entre as colunas */
+            margin-left: 80px; /* Ajustado para a largura da barra lateral */
+            padding: 20px;
+        }
+
+        .column {
+            flex: 1;
+            padding: 10px;
+            box-sizing: border-box; /* Para incluir o padding no tamanho total da coluna */
+        }
+
+        .block {
+            background-image: url('block.jpg'); /* Imagem de textura */
+            background-size: cover;
+            margin: 10px 0;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.2s; /* Transição suave */
+        }
+
+        .block:hover {
+            transform: scale(1.05); /* Efeito de zoom ao passar o mouse */
+        }
+
+        .block a {
+           text-decoration-color: black;
+            color: inherit; /* Herdar a cor do bloco */
+            text-decoration: none; /* Remover sublinhado */
+            display: block; /* Fazer o link ocupar todo o bloco */
+            height: 10%;
+            width: 10%;
+            margin-top: 25px;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.5); /* Fundo semitransparente */
+            padding: 10px;
+            color: white;
+            font-size: 18px;
+        }
+
+        .header .icons {
+            display: flex;
+            gap: 10px;
+            margin-left: 20px;
+        }
+
+        .header .icons a {
+            display: block;
+            width: 25px;
+            height: 40px;
+            background-size: cover;
+            transition: transform 0.2s;
+        }
+
+        .header .icons a:hover {
+            transform: scale(1.1);
+        }
+
+        .header .icon1 {
+            background-image: url('1$.jpg'); /* Substitua pelo caminho do seu ícone */
+        }
+
+        .header .icon2 {
+            background-image: url('2$.jpg'); /* Substitua pelo caminho do seu ícone */
+        }
+
+        .header .icon3 {
+          color: grey;
+            background-image: url('3$.jpg'); /* Substitua pelo caminho do seu ícone */
+        }
+        .bottom-left-icon {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            width: 40px;
+            height: 50px;
+            background-image: url('menu1.jpg'); /* Substitua pelo caminho do seu ícone */
+            background-size: cover;
+            cursor: pointer;
+        }
+
+        .menu {
+            display: none;
+            position: fixed;
+            bottom: 70px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            width: 200px;
+        }
+
+        .menu ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menu ul li {
+            padding: 10px;
+            border-bottom: 1px solid #444;
+        }
+
+        .menu ul li:last-child {
+            border-bottom: none;
+        }
+
+        .menu ul li:hover {
+            background-color: #333;
+        }
+    </style>
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+
+        function toggleMenu() {
+            const menu = document.getElementById('menu');
+            if (menu.style.display === 'none' || menu.style.display === '') {
+                menu.style.display = 'block';
+            } else {
+                menu.style.display = 'none';
+            }
+        }
+
+        setInterval(updateClock, 1000);
+    </script>
+</head>
+<body onload="updateClock()">
+
+<div class="header">
+    <div id="clock"></div>
+    <div class="icons">
+        <a href="#" class="icone1">💽</a>
+        <a href="#" class="icon2">🇧🇷</a>
+        <a href="#" class="icon3">pt-br</a>
+    </div>
+</div>
+
+<div class="sidebar">
+    <ul>
+        <li><a href="#"><img src="virus1.jpg" alt="Ícone 1"></a></li>
+        <li><a href="https://vscode.dev/"><img src="icone2.jpg" alt="Ícone 2"></a></li>
+        <li><a href="https://duckduckgo.com/?t=ofa"><img src="icone3.jpg" alt="Ícone 3"></a></li>
+        <li><a href="terminal.html"><img src="icone4.jpg" alt="Ícone 4"></a></li>
+        <li><a href="ejeção.html"><img src="icone5.jpg" alt="Ícone 5"></a></li>
+    </ul>
+</div>
+
+<div class="content">
+    <h1>!!!</h1>
+    <p>Em desenvolvimento.</p>
+</div>
+
+<div class="blocks-container">
+    <div class="column">
+        <div class="block"><a href="Desenvolvedor.html">D</a></div>
+        <div class="block"><a href="#">T</a></div>
+    </div>
+    <div class="column">
+        <div class="block"><a href="#">T</a></div>
+        <div class="block"><a href="#">T</a></div>
+    </div>
+    <div class="column">
+        <div class="block"><a href="#">T</a></div>
+        <div class="block"><a href="#">T</a></div>
+    </div>
+</div>
+
+<div class="bottom-left-icon" onclick="toggleMenu()"></div>
+
+<div id="menu" class="menu">
+    <ul>
+        <li><a href="#">Teste</a></li>
+        <li><a href="#">Teste</a></li>
+        <li><a href="#">Teste</a></li>
+    </ul>
+</div>
+
+</body>
+</html>

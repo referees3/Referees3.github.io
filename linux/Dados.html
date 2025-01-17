@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dados</title>
+</head>
+<style>
+    body {
+  background-color: #000000;
+  position: fixed;
+      }
+  h1 {
+  color: red;
+  text-align: center;
+  }
+  p {
+    color: red;
+   }
+  label {
+    color: red;
+  }
+  input {
+    color: red;
+  }
+  
+          button {
+            display: inline-block;
+            width: 100%;
+            max-width: 200px;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #0000;
+            color: grey;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+        }
+        button:hover {
+            background-color: #0000;
+        }
+
+</style>
+<body>
+    <h1>GRD</h1>
+    <label for="quantidade">Quantidade:</label>
+    <input type="number" id="quantidade" value="1" min="1">
+    <button onclick="mostrarDados()">DD</button>
+    <div id="dados"></div>
+
+    <script>
+        function gerarDados(quantidade) {
+            var nomes = ["João","Maria","Pedro","Ana","Adélia","Adriana","Alba","Alice","Aline","Amanda","Ana","Beatriz","Bruna","Camila","Carolina","Catarina","Clara","Claudia","Cristina","Daniela","Diana","Eduarda","Elisa","Emanuela","Erica","Fernanda","Francisca","Gabriela","Helena","Inês","Joana","Juliana","Laura","Leonor","Luciana","Luísa","Manuela","Maria","Mariana","Marta","Matilde","Mafalda","Margarida","Mariana","Mónica","Natália","Nicole","Patrícia","Rita","Sara","Sofia","Susana","Teresa","Vanessa","Vera","Vitória","Afonso","Alexandre","André","António","Bernardo","Bruno","Davi","Diogo","Duarte","Eduardo","Emanuel","Francisco","Gabriel","Guilherme","Gustavo","Henrique","João","Joaquim","José","Leonardo","Lucas","Luíz","Manuel","Martim","Miguel","Nuno","Pedro","Rafael","Ricardo","Rodrigo","Santiago","Tomás","Vicente","Vicente"];
+            var sobrenomes = ["Silva", "Santos", "Oliveira", "Souza", "Pereira", "mendes"];
+            var idades = [15,16,17,18,19,20,21,22,23,24,25,26,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,"não identificado"];
+            var cpfs = ["123.456.789-00", "987.654.321-00", "234.567.890-00", "543.210.987-00", "876.543.210-00"];
+            var telefones = ["(11) 91234-5678", "(21) 98765-4321", "(31) 87654-3210", "(41) 76543-2109", "(51) 65432-1098"];
+            var coresPelicula = ["Preto", "Azul", "Verde", "Vermelho", "Cinza"];
+            var enderecos = ["Rua A, 163", "Av. B, 426", "Praça C, 729", "Alameda D, 1041", "Travessa E, 1483"];
+            var nomesPais = ["José", "Ana", "Paulo", "Marta", "Luiz"];
+            var sobrenomesPais = ["Ribeiro", "Oliveira", "Santos", "Silva", "Costa"];
+            var cidades = ["São Paulo", "Rio de Janeiro", "Belo Horizonte", "Porto Alegre", "Salvador"];
+            var bairros = ["Centro", "Copacabana", "Pinheiros", "Barra da Tijuca", "Boa Viagem"];
+            var numerosCartao = ["1234 5678 9012 3456", "9876 5432 1098 7654", "2468 1357 8024 6913", "3691 2580 1473 5826", "8024 6913 3579 2468"];
+            var saldos = ["R$ 00,00", "R$ 1,48", "R$ 1000,00", "R$ 5000,00", "R$ 750,00", "R$ 3000,00", "R$ 20000,00"];
+            var horasNascimento = ["00:00", "00:01", "00:02", "00:03", "00:04", "00:05", "00:06", "00:07", "00:08", "00:09", "00:10", "00:11", "00:12", "00:13", "00:14", "00:15", "00:16", "00:17", "00:18", "00:19", "00:20", "00:21", "00:22", "00:23", "00:24", "00:25", "00:26", "00:27", "00:28", "00:29", "00:30", "00:31", "00:32", "00:33", "00:34", "00:35", "00:36", "00:37", "00:38", "00:39", "00:40", "00:41", "00:42", "00:00", "00:00", "00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00", "10:30", "13:45", "15:20", "19:10"];
+            var quantidadeIrmaos = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+
+            var dadosGerados = [];
+
+            for (var i = 0; i < quantidade; i++) {
+                var indiceNome = Math.floor(Math.random() * nomes.length);
+                var indiceSobrenome = Math.floor(Math.random() * sobrenomes.length);
+                var idade = idades[Math.floor(Math.random() * idades.length)];
+                var cpf = cpfs[Math.floor(Math.random() * cpfs.length)];
+                var telefone = telefones[Math.floor(Math.random() * telefones.length)];
+                var corPelicula = coresPelicula[Math.floor(Math.random() * coresPelicula.length)];
+                var endereco = enderecos[Math.floor(Math.random() * enderecos.length)];
+                var nomePai = nomesPais[Math.floor(Math.random() * nomesPais.length)];
+                var sobrenomePai = sobrenomesPais[Math.floor(Math.random() * sobrenomesPais.length)];
+                var nomeMae = nomesPais[Math.floor(Math.random() * nomesPais.length)]; // Mesma lista de nomes para mães
+                var sobrenomeMae = sobrenomesPais[Math.floor(Math.random() * sobrenomesPais.length)];
+                var cidade = cidades[Math.floor(Math.random() * cidades.length)];
+                var bairro = bairros[Math.floor(Math.random() * bairros.length)];
+                var numeroCartao = numerosCartao[Math.floor(Math.random() * numerosCartao.length)];
+                var saldo = saldos[Math.floor(Math.random() * saldos.length)];
+                var horaNascimento = horasNascimento[Math.floor(Math.random() * horasNascimento.length)];
+                var quantidadeIrmaos = quantidadeIrmaos[Math.floor(Math.random() * quantidadeIrmaos.length)];
+
+                dadosGerados.push({
+                    nome: nomes[indiceNome],
+                    sobrenome: sobrenomes[indiceSobrenome],
+                    idade: idade,
+                    cpf: cpf,
+                    telefone: telefone,
+                    corPelicula: corPelicula,
+                    endereco: endereco,
+                    nomePai: nomePai + " " + sobrenomePai,
+                    nomeMae: nomeMae + " " + sobrenomeMae,
+                    cidade: cidade,
+                    bairro: bairro,
+                    numeroCartao: numeroCartao,
+                    saldo: saldo,
+                    horaNascimento: horaNascimento,
+                    quantidadeIrmaos: quantidadeIrmaos
+                });
+            }
+
+            return dadosGerados;
+        }
+
+        function mostrarDados() {
+            var quantidade = parseInt(document.getElementById("quantidade").value);
+            var dados = gerarDados(quantidade);
+            var dadosHTML = "";
+
+            for (var i = 0; i < dados.length; i++) {
+                dadosHTML += "<p><strong>Nome:</strong> " + dados[i].nome + " " + dados[i].sobrenome + "</p>" +
+                             "<p><strong>Idade:</strong> " + dados[i].idade + "</p>" +
+                             "<p><strong>CPF:</strong> " + dados[i].cpf + "</p>" +
+                             "<p><strong>Telefone:</strong> " + dados[i].telefone + "</p>" +
+                             "<p><strong>Endereço:</strong> " + dados[i].endereco + "</p>" +
+                             "<p><strong>Nome do Pai:</strong> " + dados[i].nomePai + "</p>" +
+                             "<p><strong>Nome da Mãe:</strong> " + dados[i].nomeMae + "</p>" +
+                             "<p><strong>Cidade:</strong> " + dados[i].cidade + "</p>" +
+                             "<p><strong>Bairro:</strong> " + dados[i].bairro + "</p>" +
+                             "<p><strong>Número do Cartão de Crédito:</strong> " + dados[i].numeroCartao + "</p>" +
+                             "<p><strong>Saldo da Conta Bancária:</strong> " + dados[i].saldo + "</p>" +
+                             "<p><strong>Hora de Nascimento:</strong> " + dados[i].horaNascimento + "</p>" +
+                             "<p><strong>Quantidade de Irmãos:</strong> " + dados[i].quantidadeIrmaos + "</p>" +
+                             "<p><strong>Cor da Película:</strong> " + dados[i].corPelicula + "</p><hr>";
+            }
+
+            document.getElementById("dados").innerHTML = dadosHTML;
+        }
+    </script>
+    <script>
+      alert ("No momento só e possível gerar 2 fileiras de dados")
+      alert ("Atenção: Os dados gerados são dedicado a segurança da informação!")
+    </script>
+    <footer style="background-image: url('1.gif'); background-color: #0000; color: darkgrey; padding: 20px; text-align: center; font-family: Arial, sans-serif; width: 95%; height: 85px;">
+    <h5>© RfStudio</h5>
+</footer>
+    
+    <link rel="stylesheet" href="rf#.css">
+</body>
+</html>
+    
